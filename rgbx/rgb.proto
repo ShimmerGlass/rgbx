@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+option go_package = "github.com/shimmerglass/rgbx/rgbx";
+package rgbx;
+
+service RGBizer {
+    rpc SetFrame(Frame) returns (SetFrameResponse) {}
+}
+
+message Frame {
+    enum DeviceType {
+        KEYBOARD = 0;
+    }
+
+    uint32 priority = 2;
+    int32 duration_ms = 3;
+    DeviceType device_type = 4;
+
+
+    oneof effect {
+        EffectStatic static = 100;
+        EffectMatrix matrix = 101;
+    }
+}
+
+message SetFrameResponse {
+    bool success = 1;
+}
+
+message EffectStatic {
+    Color color = 1;
+}
+
+message EffectMatrix {
+    repeated Row rows = 1;
+}
+
+message Row {
+    repeated Color data = 1;
+}
+
+message Color {
+    int32 R = 1;
+    int32 G = 2;
+    int32 B = 3;
+}
+
