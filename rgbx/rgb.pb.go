@@ -25,65 +25,69 @@ const (
 // of the legacy proto package is being used.
 const _ = proto.ProtoPackageIsVersion4
 
-type Frame_DeviceType int32
+type DeviceType int32
 
 const (
-	Frame_KEYBOARD Frame_DeviceType = 0
+	DeviceType_KEYBOARD DeviceType = 0
 )
 
-// Enum value maps for Frame_DeviceType.
+// Enum value maps for DeviceType.
 var (
-	Frame_DeviceType_name = map[int32]string{
+	DeviceType_name = map[int32]string{
 		0: "KEYBOARD",
 	}
-	Frame_DeviceType_value = map[string]int32{
+	DeviceType_value = map[string]int32{
 		"KEYBOARD": 0,
 	}
 )
 
-func (x Frame_DeviceType) Enum() *Frame_DeviceType {
-	p := new(Frame_DeviceType)
+func (x DeviceType) Enum() *DeviceType {
+	p := new(DeviceType)
 	*p = x
 	return p
 }
 
-func (x Frame_DeviceType) String() string {
+func (x DeviceType) String() string {
 	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
 }
 
-func (Frame_DeviceType) Descriptor() protoreflect.EnumDescriptor {
+func (DeviceType) Descriptor() protoreflect.EnumDescriptor {
 	return file_rgbx_rgb_proto_enumTypes[0].Descriptor()
 }
 
-func (Frame_DeviceType) Type() protoreflect.EnumType {
+func (DeviceType) Type() protoreflect.EnumType {
 	return &file_rgbx_rgb_proto_enumTypes[0]
 }
 
-func (x Frame_DeviceType) Number() protoreflect.EnumNumber {
+func (x DeviceType) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
 
-// Deprecated: Use Frame_DeviceType.Descriptor instead.
-func (Frame_DeviceType) EnumDescriptor() ([]byte, []int) {
-	return file_rgbx_rgb_proto_rawDescGZIP(), []int{0, 0}
+// Deprecated: Use DeviceType.Descriptor instead.
+func (DeviceType) EnumDescriptor() ([]byte, []int) {
+	return file_rgbx_rgb_proto_rawDescGZIP(), []int{0}
 }
 
-type Frame struct {
+type SetRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Priority   uint32           `protobuf:"varint,2,opt,name=priority,proto3" json:"priority,omitempty"`
-	DurationMs int32            `protobuf:"varint,3,opt,name=duration_ms,json=durationMs,proto3" json:"duration_ms,omitempty"`
-	DeviceType Frame_DeviceType `protobuf:"varint,4,opt,name=device_type,json=deviceType,proto3,enum=rgbx.Frame_DeviceType" json:"device_type,omitempty"`
+	Priority   uint32     `protobuf:"varint,1,opt,name=priority,proto3" json:"priority,omitempty"`
+	DurationMs int32      `protobuf:"varint,2,opt,name=duration_ms,json=durationMs,proto3" json:"duration_ms,omitempty"`
+	DeviceType DeviceType `protobuf:"varint,3,opt,name=device_type,json=deviceType,proto3,enum=rgbx.DeviceType" json:"device_type,omitempty"`
 	// Types that are assignable to Effect:
-	//	*Frame_Static
-	//	*Frame_Matrix
-	Effect isFrame_Effect `protobuf_oneof:"effect"`
+	//	*SetRequest_Static
+	//	*SetRequest_Matrix
+	//	*SetRequest_Wave
+	//	*SetRequest_Nightsky
+	//	*SetRequest_K2000
+	//	*SetRequest_Progress
+	Effect isSetRequest_Effect `protobuf_oneof:"effect"`
 }
 
-func (x *Frame) Reset() {
-	*x = Frame{}
+func (x *SetRequest) Reset() {
+	*x = SetRequest{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_rgbx_rgb_proto_msgTypes[0]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -91,13 +95,13 @@ func (x *Frame) Reset() {
 	}
 }
 
-func (x *Frame) String() string {
+func (x *SetRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*Frame) ProtoMessage() {}
+func (*SetRequest) ProtoMessage() {}
 
-func (x *Frame) ProtoReflect() protoreflect.Message {
+func (x *SetRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_rgbx_rgb_proto_msgTypes[0]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -109,79 +113,132 @@ func (x *Frame) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Frame.ProtoReflect.Descriptor instead.
-func (*Frame) Descriptor() ([]byte, []int) {
+// Deprecated: Use SetRequest.ProtoReflect.Descriptor instead.
+func (*SetRequest) Descriptor() ([]byte, []int) {
 	return file_rgbx_rgb_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *Frame) GetPriority() uint32 {
+func (x *SetRequest) GetPriority() uint32 {
 	if x != nil {
 		return x.Priority
 	}
 	return 0
 }
 
-func (x *Frame) GetDurationMs() int32 {
+func (x *SetRequest) GetDurationMs() int32 {
 	if x != nil {
 		return x.DurationMs
 	}
 	return 0
 }
 
-func (x *Frame) GetDeviceType() Frame_DeviceType {
+func (x *SetRequest) GetDeviceType() DeviceType {
 	if x != nil {
 		return x.DeviceType
 	}
-	return Frame_KEYBOARD
+	return DeviceType_KEYBOARD
 }
 
-func (m *Frame) GetEffect() isFrame_Effect {
+func (m *SetRequest) GetEffect() isSetRequest_Effect {
 	if m != nil {
 		return m.Effect
 	}
 	return nil
 }
 
-func (x *Frame) GetStatic() *EffectStatic {
-	if x, ok := x.GetEffect().(*Frame_Static); ok {
+func (x *SetRequest) GetStatic() *EffectStatic {
+	if x, ok := x.GetEffect().(*SetRequest_Static); ok {
 		return x.Static
 	}
 	return nil
 }
 
-func (x *Frame) GetMatrix() *EffectMatrix {
-	if x, ok := x.GetEffect().(*Frame_Matrix); ok {
+func (x *SetRequest) GetMatrix() *EffectMatrix {
+	if x, ok := x.GetEffect().(*SetRequest_Matrix); ok {
 		return x.Matrix
 	}
 	return nil
 }
 
-type isFrame_Effect interface {
-	isFrame_Effect()
+func (x *SetRequest) GetWave() *EffectWave {
+	if x, ok := x.GetEffect().(*SetRequest_Wave); ok {
+		return x.Wave
+	}
+	return nil
 }
 
-type Frame_Static struct {
+func (x *SetRequest) GetNightsky() *EffectNightSky {
+	if x, ok := x.GetEffect().(*SetRequest_Nightsky); ok {
+		return x.Nightsky
+	}
+	return nil
+}
+
+func (x *SetRequest) GetK2000() *EffectK2000 {
+	if x, ok := x.GetEffect().(*SetRequest_K2000); ok {
+		return x.K2000
+	}
+	return nil
+}
+
+func (x *SetRequest) GetProgress() *EffectProgress {
+	if x, ok := x.GetEffect().(*SetRequest_Progress); ok {
+		return x.Progress
+	}
+	return nil
+}
+
+type isSetRequest_Effect interface {
+	isSetRequest_Effect()
+}
+
+type SetRequest_Static struct {
 	Static *EffectStatic `protobuf:"bytes,100,opt,name=static,proto3,oneof"`
 }
 
-type Frame_Matrix struct {
+type SetRequest_Matrix struct {
 	Matrix *EffectMatrix `protobuf:"bytes,101,opt,name=matrix,proto3,oneof"`
 }
 
-func (*Frame_Static) isFrame_Effect() {}
+type SetRequest_Wave struct {
+	Wave *EffectWave `protobuf:"bytes,102,opt,name=wave,proto3,oneof"`
+}
 
-func (*Frame_Matrix) isFrame_Effect() {}
+type SetRequest_Nightsky struct {
+	Nightsky *EffectNightSky `protobuf:"bytes,103,opt,name=nightsky,proto3,oneof"`
+}
 
-type SetFrameResponse struct {
+type SetRequest_K2000 struct {
+	K2000 *EffectK2000 `protobuf:"bytes,104,opt,name=k2000,proto3,oneof"`
+}
+
+type SetRequest_Progress struct {
+	Progress *EffectProgress `protobuf:"bytes,105,opt,name=progress,proto3,oneof"`
+}
+
+func (*SetRequest_Static) isSetRequest_Effect() {}
+
+func (*SetRequest_Matrix) isSetRequest_Effect() {}
+
+func (*SetRequest_Wave) isSetRequest_Effect() {}
+
+func (*SetRequest_Nightsky) isSetRequest_Effect() {}
+
+func (*SetRequest_K2000) isSetRequest_Effect() {}
+
+func (*SetRequest_Progress) isSetRequest_Effect() {}
+
+type RemoveRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Success bool `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
+	Priority   uint32     `protobuf:"varint,1,opt,name=priority,proto3" json:"priority,omitempty"`
+	DeviceType DeviceType `protobuf:"varint,2,opt,name=device_type,json=deviceType,proto3,enum=rgbx.DeviceType" json:"device_type,omitempty"`
 }
 
-func (x *SetFrameResponse) Reset() {
-	*x = SetFrameResponse{}
+func (x *RemoveRequest) Reset() {
+	*x = RemoveRequest{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_rgbx_rgb_proto_msgTypes[1]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -189,13 +246,13 @@ func (x *SetFrameResponse) Reset() {
 	}
 }
 
-func (x *SetFrameResponse) String() string {
+func (x *RemoveRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*SetFrameResponse) ProtoMessage() {}
+func (*RemoveRequest) ProtoMessage() {}
 
-func (x *SetFrameResponse) ProtoReflect() protoreflect.Message {
+func (x *RemoveRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_rgbx_rgb_proto_msgTypes[1]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -207,12 +264,66 @@ func (x *SetFrameResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use SetFrameResponse.ProtoReflect.Descriptor instead.
-func (*SetFrameResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use RemoveRequest.ProtoReflect.Descriptor instead.
+func (*RemoveRequest) Descriptor() ([]byte, []int) {
 	return file_rgbx_rgb_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *SetFrameResponse) GetSuccess() bool {
+func (x *RemoveRequest) GetPriority() uint32 {
+	if x != nil {
+		return x.Priority
+	}
+	return 0
+}
+
+func (x *RemoveRequest) GetDeviceType() DeviceType {
+	if x != nil {
+		return x.DeviceType
+	}
+	return DeviceType_KEYBOARD
+}
+
+type SuccessResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Success bool `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
+}
+
+func (x *SuccessResponse) Reset() {
+	*x = SuccessResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_rgbx_rgb_proto_msgTypes[2]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *SuccessResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SuccessResponse) ProtoMessage() {}
+
+func (x *SuccessResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_rgbx_rgb_proto_msgTypes[2]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SuccessResponse.ProtoReflect.Descriptor instead.
+func (*SuccessResponse) Descriptor() ([]byte, []int) {
+	return file_rgbx_rgb_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *SuccessResponse) GetSuccess() bool {
 	if x != nil {
 		return x.Success
 	}
@@ -230,7 +341,7 @@ type EffectStatic struct {
 func (x *EffectStatic) Reset() {
 	*x = EffectStatic{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_rgbx_rgb_proto_msgTypes[2]
+		mi := &file_rgbx_rgb_proto_msgTypes[3]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -243,7 +354,7 @@ func (x *EffectStatic) String() string {
 func (*EffectStatic) ProtoMessage() {}
 
 func (x *EffectStatic) ProtoReflect() protoreflect.Message {
-	mi := &file_rgbx_rgb_proto_msgTypes[2]
+	mi := &file_rgbx_rgb_proto_msgTypes[3]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -256,12 +367,67 @@ func (x *EffectStatic) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use EffectStatic.ProtoReflect.Descriptor instead.
 func (*EffectStatic) Descriptor() ([]byte, []int) {
-	return file_rgbx_rgb_proto_rawDescGZIP(), []int{2}
+	return file_rgbx_rgb_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *EffectStatic) GetColor() *Color {
 	if x != nil {
 		return x.Color
+	}
+	return nil
+}
+
+type EffectNightSky struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Color1 *Color `protobuf:"bytes,1,opt,name=color1,proto3" json:"color1,omitempty"`
+	Color2 *Color `protobuf:"bytes,2,opt,name=color2,proto3" json:"color2,omitempty"`
+}
+
+func (x *EffectNightSky) Reset() {
+	*x = EffectNightSky{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_rgbx_rgb_proto_msgTypes[4]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *EffectNightSky) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*EffectNightSky) ProtoMessage() {}
+
+func (x *EffectNightSky) ProtoReflect() protoreflect.Message {
+	mi := &file_rgbx_rgb_proto_msgTypes[4]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use EffectNightSky.ProtoReflect.Descriptor instead.
+func (*EffectNightSky) Descriptor() ([]byte, []int) {
+	return file_rgbx_rgb_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *EffectNightSky) GetColor1() *Color {
+	if x != nil {
+		return x.Color1
+	}
+	return nil
+}
+
+func (x *EffectNightSky) GetColor2() *Color {
+	if x != nil {
+		return x.Color2
 	}
 	return nil
 }
@@ -277,7 +443,7 @@ type EffectMatrix struct {
 func (x *EffectMatrix) Reset() {
 	*x = EffectMatrix{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_rgbx_rgb_proto_msgTypes[3]
+		mi := &file_rgbx_rgb_proto_msgTypes[5]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -290,7 +456,7 @@ func (x *EffectMatrix) String() string {
 func (*EffectMatrix) ProtoMessage() {}
 
 func (x *EffectMatrix) ProtoReflect() protoreflect.Message {
-	mi := &file_rgbx_rgb_proto_msgTypes[3]
+	mi := &file_rgbx_rgb_proto_msgTypes[5]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -303,10 +469,166 @@ func (x *EffectMatrix) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use EffectMatrix.ProtoReflect.Descriptor instead.
 func (*EffectMatrix) Descriptor() ([]byte, []int) {
-	return file_rgbx_rgb_proto_rawDescGZIP(), []int{3}
+	return file_rgbx_rgb_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *EffectMatrix) GetRows() []*Row {
+	if x != nil {
+		return x.Rows
+	}
+	return nil
+}
+
+type EffectWave struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+}
+
+func (x *EffectWave) Reset() {
+	*x = EffectWave{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_rgbx_rgb_proto_msgTypes[6]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *EffectWave) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*EffectWave) ProtoMessage() {}
+
+func (x *EffectWave) ProtoReflect() protoreflect.Message {
+	mi := &file_rgbx_rgb_proto_msgTypes[6]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use EffectWave.ProtoReflect.Descriptor instead.
+func (*EffectWave) Descriptor() ([]byte, []int) {
+	return file_rgbx_rgb_proto_rawDescGZIP(), []int{6}
+}
+
+type EffectK2000 struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Color *Color `protobuf:"bytes,1,opt,name=color,proto3" json:"color,omitempty"`
+	Row   int32  `protobuf:"varint,2,opt,name=row,proto3" json:"row,omitempty"`
+}
+
+func (x *EffectK2000) Reset() {
+	*x = EffectK2000{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_rgbx_rgb_proto_msgTypes[7]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *EffectK2000) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*EffectK2000) ProtoMessage() {}
+
+func (x *EffectK2000) ProtoReflect() protoreflect.Message {
+	mi := &file_rgbx_rgb_proto_msgTypes[7]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use EffectK2000.ProtoReflect.Descriptor instead.
+func (*EffectK2000) Descriptor() ([]byte, []int) {
+	return file_rgbx_rgb_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *EffectK2000) GetColor() *Color {
+	if x != nil {
+		return x.Color
+	}
+	return nil
+}
+
+func (x *EffectK2000) GetRow() int32 {
+	if x != nil {
+		return x.Row
+	}
+	return 0
+}
+
+type EffectProgress struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Color *Color  `protobuf:"bytes,1,opt,name=color,proto3" json:"color,omitempty"`
+	Value float64 `protobuf:"fixed64,2,opt,name=value,proto3" json:"value,omitempty"`
+	Rows  []int32 `protobuf:"varint,3,rep,packed,name=rows,proto3" json:"rows,omitempty"`
+}
+
+func (x *EffectProgress) Reset() {
+	*x = EffectProgress{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_rgbx_rgb_proto_msgTypes[8]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *EffectProgress) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*EffectProgress) ProtoMessage() {}
+
+func (x *EffectProgress) ProtoReflect() protoreflect.Message {
+	mi := &file_rgbx_rgb_proto_msgTypes[8]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use EffectProgress.ProtoReflect.Descriptor instead.
+func (*EffectProgress) Descriptor() ([]byte, []int) {
+	return file_rgbx_rgb_proto_rawDescGZIP(), []int{8}
+}
+
+func (x *EffectProgress) GetColor() *Color {
+	if x != nil {
+		return x.Color
+	}
+	return nil
+}
+
+func (x *EffectProgress) GetValue() float64 {
+	if x != nil {
+		return x.Value
+	}
+	return 0
+}
+
+func (x *EffectProgress) GetRows() []int32 {
 	if x != nil {
 		return x.Rows
 	}
@@ -324,7 +646,7 @@ type Row struct {
 func (x *Row) Reset() {
 	*x = Row{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_rgbx_rgb_proto_msgTypes[4]
+		mi := &file_rgbx_rgb_proto_msgTypes[9]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -337,7 +659,7 @@ func (x *Row) String() string {
 func (*Row) ProtoMessage() {}
 
 func (x *Row) ProtoReflect() protoreflect.Message {
-	mi := &file_rgbx_rgb_proto_msgTypes[4]
+	mi := &file_rgbx_rgb_proto_msgTypes[9]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -350,7 +672,7 @@ func (x *Row) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Row.ProtoReflect.Descriptor instead.
 func (*Row) Descriptor() ([]byte, []int) {
-	return file_rgbx_rgb_proto_rawDescGZIP(), []int{4}
+	return file_rgbx_rgb_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *Row) GetData() []*Color {
@@ -373,7 +695,7 @@ type Color struct {
 func (x *Color) Reset() {
 	*x = Color{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_rgbx_rgb_proto_msgTypes[5]
+		mi := &file_rgbx_rgb_proto_msgTypes[10]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -386,7 +708,7 @@ func (x *Color) String() string {
 func (*Color) ProtoMessage() {}
 
 func (x *Color) ProtoReflect() protoreflect.Message {
-	mi := &file_rgbx_rgb_proto_msgTypes[5]
+	mi := &file_rgbx_rgb_proto_msgTypes[10]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -399,7 +721,7 @@ func (x *Color) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Color.ProtoReflect.Descriptor instead.
 func (*Color) Descriptor() ([]byte, []int) {
-	return file_rgbx_rgb_proto_rawDescGZIP(), []int{5}
+	return file_rgbx_rgb_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *Color) GetR() int32 {
@@ -426,48 +748,83 @@ func (x *Color) GetB() int32 {
 var File_rgbx_rgb_proto protoreflect.FileDescriptor
 
 var file_rgbx_rgb_proto_rawDesc = []byte{
-	0x0a, 0x11, 0x72, 0x67, 0x62, 0x69, 0x7a, 0x65, 0x72, 0x2f, 0x72, 0x67, 0x62, 0x2e, 0x70, 0x72,
-	0x6f, 0x74, 0x6f, 0x12, 0x07, 0x72, 0x67, 0x62, 0x69, 0x7a, 0x65, 0x72, 0x22, 0x88, 0x02, 0x0a,
-	0x05, 0x46, 0x72, 0x61, 0x6d, 0x65, 0x12, 0x1a, 0x0a, 0x08, 0x70, 0x72, 0x69, 0x6f, 0x72, 0x69,
-	0x74, 0x79, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0d, 0x52, 0x08, 0x70, 0x72, 0x69, 0x6f, 0x72, 0x69,
-	0x74, 0x79, 0x12, 0x1f, 0x0a, 0x0b, 0x64, 0x75, 0x72, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x5f, 0x6d,
-	0x73, 0x18, 0x03, 0x20, 0x01, 0x28, 0x05, 0x52, 0x0a, 0x64, 0x75, 0x72, 0x61, 0x74, 0x69, 0x6f,
-	0x6e, 0x4d, 0x73, 0x12, 0x3a, 0x0a, 0x0b, 0x64, 0x65, 0x76, 0x69, 0x63, 0x65, 0x5f, 0x74, 0x79,
-	0x70, 0x65, 0x18, 0x04, 0x20, 0x01, 0x28, 0x0e, 0x32, 0x19, 0x2e, 0x72, 0x67, 0x62, 0x69, 0x7a,
-	0x65, 0x72, 0x2e, 0x46, 0x72, 0x61, 0x6d, 0x65, 0x2e, 0x44, 0x65, 0x76, 0x69, 0x63, 0x65, 0x54,
-	0x79, 0x70, 0x65, 0x52, 0x0a, 0x64, 0x65, 0x76, 0x69, 0x63, 0x65, 0x54, 0x79, 0x70, 0x65, 0x12,
-	0x2f, 0x0a, 0x06, 0x73, 0x74, 0x61, 0x74, 0x69, 0x63, 0x18, 0x64, 0x20, 0x01, 0x28, 0x0b, 0x32,
-	0x15, 0x2e, 0x72, 0x67, 0x62, 0x69, 0x7a, 0x65, 0x72, 0x2e, 0x45, 0x66, 0x66, 0x65, 0x63, 0x74,
-	0x53, 0x74, 0x61, 0x74, 0x69, 0x63, 0x48, 0x00, 0x52, 0x06, 0x73, 0x74, 0x61, 0x74, 0x69, 0x63,
-	0x12, 0x2f, 0x0a, 0x06, 0x6d, 0x61, 0x74, 0x72, 0x69, 0x78, 0x18, 0x65, 0x20, 0x01, 0x28, 0x0b,
-	0x32, 0x15, 0x2e, 0x72, 0x67, 0x62, 0x69, 0x7a, 0x65, 0x72, 0x2e, 0x45, 0x66, 0x66, 0x65, 0x63,
+	0x0a, 0x0e, 0x72, 0x67, 0x62, 0x78, 0x2f, 0x72, 0x67, 0x62, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f,
+	0x12, 0x04, 0x72, 0x67, 0x62, 0x78, 0x22, 0x9d, 0x03, 0x0a, 0x0a, 0x53, 0x65, 0x74, 0x52, 0x65,
+	0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x1a, 0x0a, 0x08, 0x70, 0x72, 0x69, 0x6f, 0x72, 0x69, 0x74,
+	0x79, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0d, 0x52, 0x08, 0x70, 0x72, 0x69, 0x6f, 0x72, 0x69, 0x74,
+	0x79, 0x12, 0x1f, 0x0a, 0x0b, 0x64, 0x75, 0x72, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x5f, 0x6d, 0x73,
+	0x18, 0x02, 0x20, 0x01, 0x28, 0x05, 0x52, 0x0a, 0x64, 0x75, 0x72, 0x61, 0x74, 0x69, 0x6f, 0x6e,
+	0x4d, 0x73, 0x12, 0x31, 0x0a, 0x0b, 0x64, 0x65, 0x76, 0x69, 0x63, 0x65, 0x5f, 0x74, 0x79, 0x70,
+	0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x0e, 0x32, 0x10, 0x2e, 0x72, 0x67, 0x62, 0x78, 0x2e, 0x44,
+	0x65, 0x76, 0x69, 0x63, 0x65, 0x54, 0x79, 0x70, 0x65, 0x52, 0x0a, 0x64, 0x65, 0x76, 0x69, 0x63,
+	0x65, 0x54, 0x79, 0x70, 0x65, 0x12, 0x2c, 0x0a, 0x06, 0x73, 0x74, 0x61, 0x74, 0x69, 0x63, 0x18,
+	0x64, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x12, 0x2e, 0x72, 0x67, 0x62, 0x78, 0x2e, 0x45, 0x66, 0x66,
+	0x65, 0x63, 0x74, 0x53, 0x74, 0x61, 0x74, 0x69, 0x63, 0x48, 0x00, 0x52, 0x06, 0x73, 0x74, 0x61,
+	0x74, 0x69, 0x63, 0x12, 0x2c, 0x0a, 0x06, 0x6d, 0x61, 0x74, 0x72, 0x69, 0x78, 0x18, 0x65, 0x20,
+	0x01, 0x28, 0x0b, 0x32, 0x12, 0x2e, 0x72, 0x67, 0x62, 0x78, 0x2e, 0x45, 0x66, 0x66, 0x65, 0x63,
 	0x74, 0x4d, 0x61, 0x74, 0x72, 0x69, 0x78, 0x48, 0x00, 0x52, 0x06, 0x6d, 0x61, 0x74, 0x72, 0x69,
-	0x78, 0x22, 0x1a, 0x0a, 0x0a, 0x44, 0x65, 0x76, 0x69, 0x63, 0x65, 0x54, 0x79, 0x70, 0x65, 0x12,
-	0x0c, 0x0a, 0x08, 0x4b, 0x45, 0x59, 0x42, 0x4f, 0x41, 0x52, 0x44, 0x10, 0x00, 0x42, 0x08, 0x0a,
-	0x06, 0x65, 0x66, 0x66, 0x65, 0x63, 0x74, 0x22, 0x2c, 0x0a, 0x10, 0x53, 0x65, 0x74, 0x46, 0x72,
-	0x61, 0x6d, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x18, 0x0a, 0x07, 0x73,
-	0x75, 0x63, 0x63, 0x65, 0x73, 0x73, 0x18, 0x01, 0x20, 0x01, 0x28, 0x08, 0x52, 0x07, 0x73, 0x75,
-	0x63, 0x63, 0x65, 0x73, 0x73, 0x22, 0x34, 0x0a, 0x0c, 0x45, 0x66, 0x66, 0x65, 0x63, 0x74, 0x53,
-	0x74, 0x61, 0x74, 0x69, 0x63, 0x12, 0x24, 0x0a, 0x05, 0x63, 0x6f, 0x6c, 0x6f, 0x72, 0x18, 0x01,
-	0x20, 0x01, 0x28, 0x0b, 0x32, 0x0e, 0x2e, 0x72, 0x67, 0x62, 0x69, 0x7a, 0x65, 0x72, 0x2e, 0x43,
-	0x6f, 0x6c, 0x6f, 0x72, 0x52, 0x05, 0x63, 0x6f, 0x6c, 0x6f, 0x72, 0x22, 0x30, 0x0a, 0x0c, 0x45,
-	0x66, 0x66, 0x65, 0x63, 0x74, 0x4d, 0x61, 0x74, 0x72, 0x69, 0x78, 0x12, 0x20, 0x0a, 0x04, 0x72,
-	0x6f, 0x77, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x0c, 0x2e, 0x72, 0x67, 0x62, 0x69,
-	0x7a, 0x65, 0x72, 0x2e, 0x52, 0x6f, 0x77, 0x52, 0x04, 0x72, 0x6f, 0x77, 0x73, 0x22, 0x29, 0x0a,
-	0x03, 0x52, 0x6f, 0x77, 0x12, 0x22, 0x0a, 0x04, 0x64, 0x61, 0x74, 0x61, 0x18, 0x01, 0x20, 0x03,
-	0x28, 0x0b, 0x32, 0x0e, 0x2e, 0x72, 0x67, 0x62, 0x69, 0x7a, 0x65, 0x72, 0x2e, 0x43, 0x6f, 0x6c,
-	0x6f, 0x72, 0x52, 0x04, 0x64, 0x61, 0x74, 0x61, 0x22, 0x31, 0x0a, 0x05, 0x43, 0x6f, 0x6c, 0x6f,
-	0x72, 0x12, 0x0c, 0x0a, 0x01, 0x52, 0x18, 0x01, 0x20, 0x01, 0x28, 0x05, 0x52, 0x01, 0x52, 0x12,
-	0x0c, 0x0a, 0x01, 0x47, 0x18, 0x02, 0x20, 0x01, 0x28, 0x05, 0x52, 0x01, 0x47, 0x12, 0x0c, 0x0a,
-	0x01, 0x42, 0x18, 0x03, 0x20, 0x01, 0x28, 0x05, 0x52, 0x01, 0x42, 0x32, 0x42, 0x0a, 0x07, 0x52,
-	0x47, 0x42, 0x69, 0x7a, 0x65, 0x72, 0x12, 0x37, 0x0a, 0x08, 0x53, 0x65, 0x74, 0x46, 0x72, 0x61,
-	0x6d, 0x65, 0x12, 0x0e, 0x2e, 0x72, 0x67, 0x62, 0x69, 0x7a, 0x65, 0x72, 0x2e, 0x46, 0x72, 0x61,
-	0x6d, 0x65, 0x1a, 0x19, 0x2e, 0x72, 0x67, 0x62, 0x69, 0x7a, 0x65, 0x72, 0x2e, 0x53, 0x65, 0x74,
-	0x46, 0x72, 0x61, 0x6d, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x42,
-	0x29, 0x5a, 0x27, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x73, 0x68,
-	0x69, 0x6d, 0x6d, 0x65, 0x72, 0x67, 0x6c, 0x61, 0x73, 0x73, 0x2f, 0x72, 0x67, 0x62, 0x69, 0x7a,
-	0x65, 0x72, 0x2f, 0x72, 0x67, 0x62, 0x69, 0x7a, 0x65, 0x72, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74,
-	0x6f, 0x33,
+	0x78, 0x12, 0x26, 0x0a, 0x04, 0x77, 0x61, 0x76, 0x65, 0x18, 0x66, 0x20, 0x01, 0x28, 0x0b, 0x32,
+	0x10, 0x2e, 0x72, 0x67, 0x62, 0x78, 0x2e, 0x45, 0x66, 0x66, 0x65, 0x63, 0x74, 0x57, 0x61, 0x76,
+	0x65, 0x48, 0x00, 0x52, 0x04, 0x77, 0x61, 0x76, 0x65, 0x12, 0x32, 0x0a, 0x08, 0x6e, 0x69, 0x67,
+	0x68, 0x74, 0x73, 0x6b, 0x79, 0x18, 0x67, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x14, 0x2e, 0x72, 0x67,
+	0x62, 0x78, 0x2e, 0x45, 0x66, 0x66, 0x65, 0x63, 0x74, 0x4e, 0x69, 0x67, 0x68, 0x74, 0x53, 0x6b,
+	0x79, 0x48, 0x00, 0x52, 0x08, 0x6e, 0x69, 0x67, 0x68, 0x74, 0x73, 0x6b, 0x79, 0x12, 0x29, 0x0a,
+	0x05, 0x6b, 0x32, 0x30, 0x30, 0x30, 0x18, 0x68, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x11, 0x2e, 0x72,
+	0x67, 0x62, 0x78, 0x2e, 0x45, 0x66, 0x66, 0x65, 0x63, 0x74, 0x4b, 0x32, 0x30, 0x30, 0x30, 0x48,
+	0x00, 0x52, 0x05, 0x6b, 0x32, 0x30, 0x30, 0x30, 0x12, 0x32, 0x0a, 0x08, 0x70, 0x72, 0x6f, 0x67,
+	0x72, 0x65, 0x73, 0x73, 0x18, 0x69, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x14, 0x2e, 0x72, 0x67, 0x62,
+	0x78, 0x2e, 0x45, 0x66, 0x66, 0x65, 0x63, 0x74, 0x50, 0x72, 0x6f, 0x67, 0x72, 0x65, 0x73, 0x73,
+	0x48, 0x00, 0x52, 0x08, 0x70, 0x72, 0x6f, 0x67, 0x72, 0x65, 0x73, 0x73, 0x42, 0x08, 0x0a, 0x06,
+	0x65, 0x66, 0x66, 0x65, 0x63, 0x74, 0x22, 0x5e, 0x0a, 0x0d, 0x52, 0x65, 0x6d, 0x6f, 0x76, 0x65,
+	0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x1a, 0x0a, 0x08, 0x70, 0x72, 0x69, 0x6f, 0x72,
+	0x69, 0x74, 0x79, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0d, 0x52, 0x08, 0x70, 0x72, 0x69, 0x6f, 0x72,
+	0x69, 0x74, 0x79, 0x12, 0x31, 0x0a, 0x0b, 0x64, 0x65, 0x76, 0x69, 0x63, 0x65, 0x5f, 0x74, 0x79,
+	0x70, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0e, 0x32, 0x10, 0x2e, 0x72, 0x67, 0x62, 0x78, 0x2e,
+	0x44, 0x65, 0x76, 0x69, 0x63, 0x65, 0x54, 0x79, 0x70, 0x65, 0x52, 0x0a, 0x64, 0x65, 0x76, 0x69,
+	0x63, 0x65, 0x54, 0x79, 0x70, 0x65, 0x22, 0x2b, 0x0a, 0x0f, 0x53, 0x75, 0x63, 0x63, 0x65, 0x73,
+	0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x18, 0x0a, 0x07, 0x73, 0x75, 0x63,
+	0x63, 0x65, 0x73, 0x73, 0x18, 0x01, 0x20, 0x01, 0x28, 0x08, 0x52, 0x07, 0x73, 0x75, 0x63, 0x63,
+	0x65, 0x73, 0x73, 0x22, 0x31, 0x0a, 0x0c, 0x45, 0x66, 0x66, 0x65, 0x63, 0x74, 0x53, 0x74, 0x61,
+	0x74, 0x69, 0x63, 0x12, 0x21, 0x0a, 0x05, 0x63, 0x6f, 0x6c, 0x6f, 0x72, 0x18, 0x01, 0x20, 0x01,
+	0x28, 0x0b, 0x32, 0x0b, 0x2e, 0x72, 0x67, 0x62, 0x78, 0x2e, 0x43, 0x6f, 0x6c, 0x6f, 0x72, 0x52,
+	0x05, 0x63, 0x6f, 0x6c, 0x6f, 0x72, 0x22, 0x5a, 0x0a, 0x0e, 0x45, 0x66, 0x66, 0x65, 0x63, 0x74,
+	0x4e, 0x69, 0x67, 0x68, 0x74, 0x53, 0x6b, 0x79, 0x12, 0x23, 0x0a, 0x06, 0x63, 0x6f, 0x6c, 0x6f,
+	0x72, 0x31, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x0b, 0x2e, 0x72, 0x67, 0x62, 0x78, 0x2e,
+	0x43, 0x6f, 0x6c, 0x6f, 0x72, 0x52, 0x06, 0x63, 0x6f, 0x6c, 0x6f, 0x72, 0x31, 0x12, 0x23, 0x0a,
+	0x06, 0x63, 0x6f, 0x6c, 0x6f, 0x72, 0x32, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x0b, 0x2e,
+	0x72, 0x67, 0x62, 0x78, 0x2e, 0x43, 0x6f, 0x6c, 0x6f, 0x72, 0x52, 0x06, 0x63, 0x6f, 0x6c, 0x6f,
+	0x72, 0x32, 0x22, 0x2d, 0x0a, 0x0c, 0x45, 0x66, 0x66, 0x65, 0x63, 0x74, 0x4d, 0x61, 0x74, 0x72,
+	0x69, 0x78, 0x12, 0x1d, 0x0a, 0x04, 0x72, 0x6f, 0x77, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b,
+	0x32, 0x09, 0x2e, 0x72, 0x67, 0x62, 0x78, 0x2e, 0x52, 0x6f, 0x77, 0x52, 0x04, 0x72, 0x6f, 0x77,
+	0x73, 0x22, 0x0c, 0x0a, 0x0a, 0x45, 0x66, 0x66, 0x65, 0x63, 0x74, 0x57, 0x61, 0x76, 0x65, 0x22,
+	0x42, 0x0a, 0x0b, 0x45, 0x66, 0x66, 0x65, 0x63, 0x74, 0x4b, 0x32, 0x30, 0x30, 0x30, 0x12, 0x21,
+	0x0a, 0x05, 0x63, 0x6f, 0x6c, 0x6f, 0x72, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x0b, 0x2e,
+	0x72, 0x67, 0x62, 0x78, 0x2e, 0x43, 0x6f, 0x6c, 0x6f, 0x72, 0x52, 0x05, 0x63, 0x6f, 0x6c, 0x6f,
+	0x72, 0x12, 0x10, 0x0a, 0x03, 0x72, 0x6f, 0x77, 0x18, 0x02, 0x20, 0x01, 0x28, 0x05, 0x52, 0x03,
+	0x72, 0x6f, 0x77, 0x22, 0x5d, 0x0a, 0x0e, 0x45, 0x66, 0x66, 0x65, 0x63, 0x74, 0x50, 0x72, 0x6f,
+	0x67, 0x72, 0x65, 0x73, 0x73, 0x12, 0x21, 0x0a, 0x05, 0x63, 0x6f, 0x6c, 0x6f, 0x72, 0x18, 0x01,
+	0x20, 0x01, 0x28, 0x0b, 0x32, 0x0b, 0x2e, 0x72, 0x67, 0x62, 0x78, 0x2e, 0x43, 0x6f, 0x6c, 0x6f,
+	0x72, 0x52, 0x05, 0x63, 0x6f, 0x6c, 0x6f, 0x72, 0x12, 0x14, 0x0a, 0x05, 0x76, 0x61, 0x6c, 0x75,
+	0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x01, 0x52, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x12, 0x12,
+	0x0a, 0x04, 0x72, 0x6f, 0x77, 0x73, 0x18, 0x03, 0x20, 0x03, 0x28, 0x05, 0x52, 0x04, 0x72, 0x6f,
+	0x77, 0x73, 0x22, 0x26, 0x0a, 0x03, 0x52, 0x6f, 0x77, 0x12, 0x1f, 0x0a, 0x04, 0x64, 0x61, 0x74,
+	0x61, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x0b, 0x2e, 0x72, 0x67, 0x62, 0x78, 0x2e, 0x43,
+	0x6f, 0x6c, 0x6f, 0x72, 0x52, 0x04, 0x64, 0x61, 0x74, 0x61, 0x22, 0x31, 0x0a, 0x05, 0x43, 0x6f,
+	0x6c, 0x6f, 0x72, 0x12, 0x0c, 0x0a, 0x01, 0x52, 0x18, 0x01, 0x20, 0x01, 0x28, 0x05, 0x52, 0x01,
+	0x52, 0x12, 0x0c, 0x0a, 0x01, 0x47, 0x18, 0x02, 0x20, 0x01, 0x28, 0x05, 0x52, 0x01, 0x47, 0x12,
+	0x0c, 0x0a, 0x01, 0x42, 0x18, 0x03, 0x20, 0x01, 0x28, 0x05, 0x52, 0x01, 0x42, 0x2a, 0x1a, 0x0a,
+	0x0a, 0x44, 0x65, 0x76, 0x69, 0x63, 0x65, 0x54, 0x79, 0x70, 0x65, 0x12, 0x0c, 0x0a, 0x08, 0x4b,
+	0x45, 0x59, 0x42, 0x4f, 0x41, 0x52, 0x44, 0x10, 0x00, 0x32, 0x73, 0x0a, 0x07, 0x52, 0x47, 0x42,
+	0x69, 0x7a, 0x65, 0x72, 0x12, 0x30, 0x0a, 0x03, 0x53, 0x65, 0x74, 0x12, 0x10, 0x2e, 0x72, 0x67,
+	0x62, 0x78, 0x2e, 0x53, 0x65, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x15, 0x2e,
+	0x72, 0x67, 0x62, 0x78, 0x2e, 0x53, 0x75, 0x63, 0x63, 0x65, 0x73, 0x73, 0x52, 0x65, 0x73, 0x70,
+	0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x36, 0x0a, 0x06, 0x52, 0x65, 0x6d, 0x6f, 0x76, 0x65,
+	0x12, 0x13, 0x2e, 0x72, 0x67, 0x62, 0x78, 0x2e, 0x52, 0x65, 0x6d, 0x6f, 0x76, 0x65, 0x52, 0x65,
+	0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x15, 0x2e, 0x72, 0x67, 0x62, 0x78, 0x2e, 0x53, 0x75, 0x63,
+	0x63, 0x65, 0x73, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x42, 0x23,
+	0x5a, 0x21, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x73, 0x68, 0x69,
+	0x6d, 0x6d, 0x65, 0x72, 0x67, 0x6c, 0x61, 0x73, 0x73, 0x2f, 0x72, 0x67, 0x62, 0x78, 0x2f, 0x72,
+	0x67, 0x62, 0x78, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -483,30 +840,46 @@ func file_rgbx_rgb_proto_rawDescGZIP() []byte {
 }
 
 var file_rgbx_rgb_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_rgbx_rgb_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
+var file_rgbx_rgb_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
 var file_rgbx_rgb_proto_goTypes = []interface{}{
-	(Frame_DeviceType)(0),    // 0: rgbx.Frame.DeviceType
-	(*Frame)(nil),            // 1: rgbx.Frame
-	(*SetFrameResponse)(nil), // 2: rgbx.SetFrameResponse
-	(*EffectStatic)(nil),     // 3: rgbx.EffectStatic
-	(*EffectMatrix)(nil),     // 4: rgbx.EffectMatrix
-	(*Row)(nil),              // 5: rgbx.Row
-	(*Color)(nil),            // 6: rgbx.Color
+	(DeviceType)(0),         // 0: rgbx.DeviceType
+	(*SetRequest)(nil),      // 1: rgbx.SetRequest
+	(*RemoveRequest)(nil),   // 2: rgbx.RemoveRequest
+	(*SuccessResponse)(nil), // 3: rgbx.SuccessResponse
+	(*EffectStatic)(nil),    // 4: rgbx.EffectStatic
+	(*EffectNightSky)(nil),  // 5: rgbx.EffectNightSky
+	(*EffectMatrix)(nil),    // 6: rgbx.EffectMatrix
+	(*EffectWave)(nil),      // 7: rgbx.EffectWave
+	(*EffectK2000)(nil),     // 8: rgbx.EffectK2000
+	(*EffectProgress)(nil),  // 9: rgbx.EffectProgress
+	(*Row)(nil),             // 10: rgbx.Row
+	(*Color)(nil),           // 11: rgbx.Color
 }
 var file_rgbx_rgb_proto_depIdxs = []int32{
-	0, // 0: rgbx.Frame.device_type:type_name -> rgbx.Frame.DeviceType
-	3, // 1: rgbx.Frame.static:type_name -> rgbx.EffectStatic
-	4, // 2: rgbx.Frame.matrix:type_name -> rgbx.EffectMatrix
-	6, // 3: rgbx.EffectStatic.color:type_name -> rgbx.Color
-	5, // 4: rgbx.EffectMatrix.rows:type_name -> rgbx.Row
-	6, // 5: rgbx.Row.data:type_name -> rgbx.Color
-	1, // 6: rgbx.RGBizer.SetFrame:input_type -> rgbx.Frame
-	2, // 7: rgbx.RGBizer.SetFrame:output_type -> rgbx.SetFrameResponse
-	7, // [7:8] is the sub-list for method output_type
-	6, // [6:7] is the sub-list for method input_type
-	6, // [6:6] is the sub-list for extension type_name
-	6, // [6:6] is the sub-list for extension extendee
-	0, // [0:6] is the sub-list for field type_name
+	0,  // 0: rgbx.SetRequest.device_type:type_name -> rgbx.DeviceType
+	4,  // 1: rgbx.SetRequest.static:type_name -> rgbx.EffectStatic
+	6,  // 2: rgbx.SetRequest.matrix:type_name -> rgbx.EffectMatrix
+	7,  // 3: rgbx.SetRequest.wave:type_name -> rgbx.EffectWave
+	5,  // 4: rgbx.SetRequest.nightsky:type_name -> rgbx.EffectNightSky
+	8,  // 5: rgbx.SetRequest.k2000:type_name -> rgbx.EffectK2000
+	9,  // 6: rgbx.SetRequest.progress:type_name -> rgbx.EffectProgress
+	0,  // 7: rgbx.RemoveRequest.device_type:type_name -> rgbx.DeviceType
+	11, // 8: rgbx.EffectStatic.color:type_name -> rgbx.Color
+	11, // 9: rgbx.EffectNightSky.color1:type_name -> rgbx.Color
+	11, // 10: rgbx.EffectNightSky.color2:type_name -> rgbx.Color
+	10, // 11: rgbx.EffectMatrix.rows:type_name -> rgbx.Row
+	11, // 12: rgbx.EffectK2000.color:type_name -> rgbx.Color
+	11, // 13: rgbx.EffectProgress.color:type_name -> rgbx.Color
+	11, // 14: rgbx.Row.data:type_name -> rgbx.Color
+	1,  // 15: rgbx.RGBizer.Set:input_type -> rgbx.SetRequest
+	2,  // 16: rgbx.RGBizer.Remove:input_type -> rgbx.RemoveRequest
+	3,  // 17: rgbx.RGBizer.Set:output_type -> rgbx.SuccessResponse
+	3,  // 18: rgbx.RGBizer.Remove:output_type -> rgbx.SuccessResponse
+	17, // [17:19] is the sub-list for method output_type
+	15, // [15:17] is the sub-list for method input_type
+	15, // [15:15] is the sub-list for extension type_name
+	15, // [15:15] is the sub-list for extension extendee
+	0,  // [0:15] is the sub-list for field type_name
 }
 
 func init() { file_rgbx_rgb_proto_init() }
@@ -516,7 +889,7 @@ func file_rgbx_rgb_proto_init() {
 	}
 	if !protoimpl.UnsafeEnabled {
 		file_rgbx_rgb_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Frame); i {
+			switch v := v.(*SetRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -528,7 +901,7 @@ func file_rgbx_rgb_proto_init() {
 			}
 		}
 		file_rgbx_rgb_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*SetFrameResponse); i {
+			switch v := v.(*RemoveRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -540,7 +913,7 @@ func file_rgbx_rgb_proto_init() {
 			}
 		}
 		file_rgbx_rgb_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*EffectStatic); i {
+			switch v := v.(*SuccessResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -552,7 +925,7 @@ func file_rgbx_rgb_proto_init() {
 			}
 		}
 		file_rgbx_rgb_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*EffectMatrix); i {
+			switch v := v.(*EffectStatic); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -564,7 +937,7 @@ func file_rgbx_rgb_proto_init() {
 			}
 		}
 		file_rgbx_rgb_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Row); i {
+			switch v := v.(*EffectNightSky); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -576,6 +949,66 @@ func file_rgbx_rgb_proto_init() {
 			}
 		}
 		file_rgbx_rgb_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*EffectMatrix); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_rgbx_rgb_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*EffectWave); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_rgbx_rgb_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*EffectK2000); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_rgbx_rgb_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*EffectProgress); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_rgbx_rgb_proto_msgTypes[9].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Row); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_rgbx_rgb_proto_msgTypes[10].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Color); i {
 			case 0:
 				return &v.state
@@ -589,8 +1022,12 @@ func file_rgbx_rgb_proto_init() {
 		}
 	}
 	file_rgbx_rgb_proto_msgTypes[0].OneofWrappers = []interface{}{
-		(*Frame_Static)(nil),
-		(*Frame_Matrix)(nil),
+		(*SetRequest_Static)(nil),
+		(*SetRequest_Matrix)(nil),
+		(*SetRequest_Wave)(nil),
+		(*SetRequest_Nightsky)(nil),
+		(*SetRequest_K2000)(nil),
+		(*SetRequest_Progress)(nil),
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -598,7 +1035,7 @@ func file_rgbx_rgb_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_rgbx_rgb_proto_rawDesc,
 			NumEnums:      1,
-			NumMessages:   6,
+			NumMessages:   11,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

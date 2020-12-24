@@ -17,7 +17,8 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type RGBizerClient interface {
-	SetFrame(ctx context.Context, in *Frame, opts ...grpc.CallOption) (*SetFrameResponse, error)
+	Set(ctx context.Context, in *SetRequest, opts ...grpc.CallOption) (*SuccessResponse, error)
+	Remove(ctx context.Context, in *RemoveRequest, opts ...grpc.CallOption) (*SuccessResponse, error)
 }
 
 type rGBizerClient struct {
@@ -28,9 +29,18 @@ func NewRGBizerClient(cc grpc.ClientConnInterface) RGBizerClient {
 	return &rGBizerClient{cc}
 }
 
-func (c *rGBizerClient) SetFrame(ctx context.Context, in *Frame, opts ...grpc.CallOption) (*SetFrameResponse, error) {
-	out := new(SetFrameResponse)
-	err := c.cc.Invoke(ctx, "/rgbx.RGBizer/SetFrame", in, out, opts...)
+func (c *rGBizerClient) Set(ctx context.Context, in *SetRequest, opts ...grpc.CallOption) (*SuccessResponse, error) {
+	out := new(SuccessResponse)
+	err := c.cc.Invoke(ctx, "/rgbx.RGBizer/Set", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *rGBizerClient) Remove(ctx context.Context, in *RemoveRequest, opts ...grpc.CallOption) (*SuccessResponse, error) {
+	out := new(SuccessResponse)
+	err := c.cc.Invoke(ctx, "/rgbx.RGBizer/Remove", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -41,7 +51,8 @@ func (c *rGBizerClient) SetFrame(ctx context.Context, in *Frame, opts ...grpc.Ca
 // All implementations must embed UnimplementedRGBizerServer
 // for forward compatibility
 type RGBizerServer interface {
-	SetFrame(context.Context, *Frame) (*SetFrameResponse, error)
+	Set(context.Context, *SetRequest) (*SuccessResponse, error)
+	Remove(context.Context, *RemoveRequest) (*SuccessResponse, error)
 	mustEmbedUnimplementedRGBizerServer()
 }
 
@@ -49,8 +60,11 @@ type RGBizerServer interface {
 type UnimplementedRGBizerServer struct {
 }
 
-func (UnimplementedRGBizerServer) SetFrame(context.Context, *Frame) (*SetFrameResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SetFrame not implemented")
+func (UnimplementedRGBizerServer) Set(context.Context, *SetRequest) (*SuccessResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Set not implemented")
+}
+func (UnimplementedRGBizerServer) Remove(context.Context, *RemoveRequest) (*SuccessResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Remove not implemented")
 }
 func (UnimplementedRGBizerServer) mustEmbedUnimplementedRGBizerServer() {}
 
@@ -65,20 +79,38 @@ func RegisterRGBizerServer(s grpc.ServiceRegistrar, srv RGBizerServer) {
 	s.RegisterService(&_RGBizer_serviceDesc, srv)
 }
 
-func _RGBizer_SetFrame_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Frame)
+func _RGBizer_Set_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(RGBizerServer).SetFrame(ctx, in)
+		return srv.(RGBizerServer).Set(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rgbx.RGBizer/SetFrame",
+		FullMethod: "/rgbx.RGBizer/Set",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RGBizerServer).SetFrame(ctx, req.(*Frame))
+		return srv.(RGBizerServer).Set(ctx, req.(*SetRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _RGBizer_Remove_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RemoveRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RGBizerServer).Remove(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/rgbx.RGBizer/Remove",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RGBizerServer).Remove(ctx, req.(*RemoveRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -88,8 +120,12 @@ var _RGBizer_serviceDesc = grpc.ServiceDesc{
 	HandlerType: (*RGBizerServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "SetFrame",
-			Handler:    _RGBizer_SetFrame_Handler,
+			MethodName: "Set",
+			Handler:    _RGBizer_Set_Handler,
+		},
+		{
+			MethodName: "Remove",
+			Handler:    _RGBizer_Remove_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -2,28 +2,38 @@ package server
 
 import (
 	"context"
-	"log"
 
-	"github.com/shimmerglass/rgbx/renderer"
+	"github.com/shimmerglass/rgbx/render"
 	"github.com/shimmerglass/rgbx/rgbx"
 )
 
 type Server struct {
 	rgbx.UnimplementedRGBizerServer
-	renderer renderer.Renderer
+	renderer render.Renderer
 }
 
-func New(renderer renderer.Renderer) *Server {
+func New(renderer render.Renderer) *Server {
 	return &Server{renderer: renderer}
 }
 
-func (s *Server) SetFrame(ctx context.Context, in *rgbx.Frame) (*rgbx.SetFrameResponse, error) {
-	err := s.renderer.Render(in)
+func (s *Server) Set(ctx context.Context, in *rgbx.SetRequest) (*rgbx.SuccessResponse, error) {
+	err := s.renderer.Set(in)
 	if err != nil {
-		log.Println(err)
+		return nil, err
 	}
 
-	return &rgbx.SetFrameResponse{
-		Success: err == nil,
+	return &rgbx.SuccessResponse{
+		Success: true,
+	}, nil
+}
+
+func (s *Server) Remove(ctx context.Context, in *rgbx.RemoveRequest) (*rgbx.SuccessResponse, error) {
+	err := s.renderer.Remove(in)
+	if err != nil {
+		return nil, err
+	}
+
+	return &rgbx.SuccessResponse{
+		Success: true,
 	}, nil
 }

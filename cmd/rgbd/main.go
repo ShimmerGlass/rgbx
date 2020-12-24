@@ -2,11 +2,12 @@ package main
 
 import (
 	"flag"
-	"log"
 	"net"
 
-	"github.com/shimmerglass/rgbx/renderer"
-	"github.com/shimmerglass/rgbx/renderer/razer"
+	log "github.com/sirupsen/logrus"
+
+	"github.com/shimmerglass/rgbx/device"
+	"github.com/shimmerglass/rgbx/render"
 	"github.com/shimmerglass/rgbx/rgbx"
 	"github.com/shimmerglass/rgbx/server"
 	"google.golang.org/grpc"
@@ -16,23 +17,11 @@ func main() {
 	listen := flag.String("listen", "127.0.0.1:1342", "Listen addr")
 	flag.Parse()
 
-	renderer := renderer.NewCompositor(
-		renderer.NewRenderers(
-			razer.NewRazerKeyboard(),
-		),
-	)
+	// log.SetLevel(log.DebugLevel)
 
-	err := renderer.Render(&rgbx.Frame{
-		Priority: 0,
-		Effect: &rgbx.Frame_Static{
-			Static: &rgbx.EffectStatic{
-				Color: &rgbx.Color{R: 0xff, G: 0, B: 0},
-			},
-		},
-	})
-	if err != nil {
-		log.Fatal(err)
-	}
+	compositors := render.NewCompositors(device.NewDriverPool(
+		device.NewRazerKeyboardDriver(),
+	))
 
 	lis, err := net.Listen("tcp", *listen)
 	if err != nil {
@@ -40,6 +29,6 @@ func main() {
 	}
 
 	grpcServer := grpc.NewServer()
-	rgbx.RegisterRGBizerServer(grpcServer, server.New(renderer))
+	rgbx.RegisterRGBizerServer(grpcServer, server.New(compositors))
 	grpcServer.Serve(lis)
 }

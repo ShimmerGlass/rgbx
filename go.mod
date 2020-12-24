@@ -5,6 +5,9 @@ go 1.15
 require (
 	github.com/golang/protobuf v1.4.3
 	github.com/google/go-cmp v0.5.4 // indirect
+	github.com/lucasb-eyer/go-colorful v1.0.3
+	github.com/sirupsen/logrus v1.7.0
+	github.com/urfave/cli/v2 v2.3.0
 	golang.org/x/net v0.0.0-20201216054612-986b41b23924 // indirect
 	golang.org/x/sys v0.0.0-20201214210602-f9fddec55a1e // indirect
 	golang.org/x/text v0.3.4 // indirect

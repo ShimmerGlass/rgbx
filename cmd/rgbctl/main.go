@@ -1,25 +1,26 @@
 package main
 
 import (
-	"image/color"
-	"log"
+	"os"
 
-	"github.com/shimmerglass/rgbx/cmd/rgbctl/effect"
-	"github.com/shimmerglass/rgbx/rgbx"
-	"google.golang.org/grpc"
+	log "github.com/sirupsen/logrus"
+
+	"github.com/urfave/cli/v2"
 )
 
 func main() {
-	conn, err := grpc.Dial("127.0.0.1:1342", grpc.WithInsecure())
-	if err != nil {
-		log.Fatalf("fail to dial: %v", err)
+	app := &cli.App{
+		UseShortOptionHandling: true,
+		Flags:                  []cli.Flag{},
+		Commands: []*cli.Command{
+			Set,
+			RemoveCmd,
+		},
 	}
-	defer conn.Close()
-	client := rgbx.NewRGBizerClient(conn)
 
-	e := effect.NewNightSky(client,
-		color.RGBA{R: 0xFF, G: 0x25, B: 0x5B},
-		color.RGBA{R: 0x00, G: 0xE9, B: 0xFF},
-	)
-	e.Run()
+	err := app.Run(os.Args)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 }
