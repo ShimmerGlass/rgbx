@@ -108,6 +108,9 @@ Add:
 }
 
 func (c *Compositor) Remove(f *rgbx.RemoveRequest) error {
+	c.lock.Lock()
+	defer c.lock.Unlock()
+
 	for i, channel := range c.channels {
 		if channel.priority == int(f.Priority) {
 			c.channels = append(c.channels[:i], c.channels[i+1:]...)
@@ -125,13 +128,18 @@ func (c *Compositor) render(elapsed time.Duration) error {
 	now := time.Now()
 	c.zeroFrame()
 
-	for i, channel := range c.channels {
+	cleaned := c.channels[:0]
+	for _, channel := range c.channels {
 		if channel.endAt.Before(now) && channel.duration > 0 {
-			c.channels = append(c.channels[:i], c.channels[i+1:]...)
 			c.clock.Remove(channel.duration, false)
 			continue
 		}
+		cleaned = append(cleaned, channel)
+		continue
+	}
+	c.channels = cleaned
 
+	for _, channel := range c.channels {
 		channel.effect.Render(elapsed, c.frame)
 	}
 

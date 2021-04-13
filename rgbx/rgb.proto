@@ -4,72 +4,77 @@ option go_package = "github.com/shimmerglass/rgbx/rgbx";
 package rgbx;
 
 service RGBizer {
-    rpc Set(SetRequest) returns (SuccessResponse) {}
-    rpc Remove(RemoveRequest) returns (SuccessResponse) {}
+  rpc Set(SetRequest) returns (SuccessResponse) {
+  }
+  rpc Remove(RemoveRequest) returns (SuccessResponse) {
+  }
 }
 
-enum DeviceType {
-    KEYBOARD = 0;
-}
+enum DeviceType { KEYBOARD = 0; }
 
 message SetRequest {
-    uint32 priority = 1;
-    int32 duration_ms = 2;
-    DeviceType device_type = 3;
+  uint32 priority = 1;
+  int32 duration_ms = 2;
+  DeviceType device_type = 3;
 
-    oneof effect {
-        EffectStatic static = 100;
-        EffectMatrix matrix = 101;
-        EffectWave wave = 102;
-        EffectNightSky nightsky = 103;
-        EffectK2000 k2000 = 104;
-        EffectProgress progress = 105;
-    }
+  oneof effect {
+    EffectStatic static = 100;
+    EffectMatrix matrix = 101;
+    EffectWave wave = 102;
+    EffectNightSky nightsky = 103;
+    EffectK2000 k2000 = 104;
+    EffectProgress progress = 105;
+    EffectVUMeter VUMeter = 106;
+  }
 }
 
 message RemoveRequest {
-    uint32 priority = 1;
-    DeviceType device_type = 2;
+  uint32 priority = 1;
+  DeviceType device_type = 2;
 }
 
 message SuccessResponse {
-    bool success = 1;
+  bool success = 1;
 }
 
 message EffectStatic {
-    Color color = 1;
+  Color color = 1;
 }
 
 message EffectNightSky {
-    Color color1 = 1;
-    Color color2 = 2;
+  Color color1 = 1;
+  Color color2 = 2;
 }
 
 message EffectMatrix {
-    repeated Row rows = 1;
+  repeated Row rows = 1;
 }
 
 message EffectWave {
 }
 
 message EffectK2000 {
-    Color color = 1;
-    int32 row = 2;
+  Color color = 1;
+  int32 row = 2;
 }
 
 message EffectProgress {
-    Color color = 1;
-    double value = 2;
-    repeated int32 rows = 3;
+  Color color = 1;
+  double value = 2;
+  repeated int32 rows = 3;
+}
+
+message EffectVUMeter {
+  Color color1 = 1;
+  Color color2 = 2;
 }
 
 message Row {
-    repeated Color data = 1;
+  repeated Color data = 1;
 }
 
 message Color {
-    int32 R = 1;
-    int32 G = 2;
-    int32 B = 3;
+  int32 R = 1;
+  int32 G = 2;
+  int32 B = 3;
 }
-

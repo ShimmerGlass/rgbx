@@ -33,6 +33,7 @@ var Set = &cli.Command{
 		SetWaveCmd,
 		SetK2000Cmd,
 		SetProgressCmd,
+		SetVUMeterCmd,
 	},
 }
 

@@ -3,6 +3,7 @@ package device
 import (
 	"bytes"
 	"io/ioutil"
+	"os"
 	"path"
 	"path/filepath"
 	"time"
@@ -56,9 +57,9 @@ func (r *RazerKeyboardDriver) updateDevices() error {
 			continue
 		}
 
-		d := &RazerKeyboard{
-			path:    devicePath,
-			limiter: time.NewTicker(50 * time.Millisecond),
+		d, err := NewRazerKeyboard(devicePath)
+		if err != nil {
+			return err
 		}
 		r.devices[devicePath] = struct{}{}
 		r.added <- d
@@ -76,7 +77,26 @@ func (r *RazerKeyboardDriver) updateDevices() error {
 
 type RazerKeyboard struct {
 	path    string
+	f       *os.File
 	limiter *time.Ticker
+}
+
+func NewRazerKeyboard(path string) (*RazerKeyboard, error) {
+	err := ioutil.WriteFile(filepath.Join(path, "matrix_effect_custom"), []byte{1}, 0)
+	if err != nil {
+		return nil, err
+	}
+
+	f, err := os.OpenFile(filepath.Join(path, "matrix_custom_frame"), os.O_WRONLY, 0)
+	if err != nil {
+		return nil, err
+	}
+
+	return &RazerKeyboard{
+		path:    path,
+		limiter: time.NewTicker(50 * time.Millisecond),
+		f:       f,
+	}, nil
 }
 
 func (k *RazerKeyboard) ID() string {
@@ -98,7 +118,7 @@ func (k *RazerKeyboard) Height() int {
 func (r *RazerKeyboard) Render(frame [][]rgbx.Color) error {
 	log.Debugf("razer: %s: render", r.path)
 
-	<-r.limiter.C
+	// <-r.limiter.C
 
 	buf := &bytes.Buffer{}
 	for i, row := range frame {
@@ -108,19 +128,10 @@ func (r *RazerKeyboard) Render(frame [][]rgbx.Color) error {
 			buf.Write([]byte{byte(c.R), byte(c.G), byte(c.B)})
 		}
 	}
-
-	err := ioutil.WriteFile(
-		filepath.Join(r.path, "matrix_effect_custom"),
-		[]byte{1},
-		0,
-	)
+	_, err := r.f.Write(buf.Bytes())
 	if err != nil {
 		return err
 	}
 
-	return ioutil.WriteFile(
-		filepath.Join(r.path, "matrix_custom_frame"),
-		buf.Bytes(),
-		0,
-	)
+	return nil
 }

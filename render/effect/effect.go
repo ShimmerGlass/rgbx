@@ -22,6 +22,8 @@ func New(config interface{}) (Effect, error) {
 		return NewNightSky(*e.Nightsky.Color1, *e.Nightsky.Color2), nil
 	case *rgbx.SetRequest_K2000:
 		return NewK2000(*e.K2000.Color, int(e.K2000.Row)), nil
+	case *rgbx.SetRequest_VUMeter:
+		return NewVUMeter(*e.VUMeter.Color1, *e.VUMeter.Color2), nil
 	case *rgbx.SetRequest_Progress:
 		rows := []int{}
 		for _, v := range e.Progress.Rows {
